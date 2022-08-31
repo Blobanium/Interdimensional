@@ -37,7 +37,7 @@ class CreateGuiHandler(player: ServerPlayerEntity) : SimpleGui(ScreenHandlerType
     var identifier: Identifier = Identifier(this.player.gameProfile.name.lowercase(), RandomStringUtils.randomNumeric(5))
     var difficulty: Difficulty = Difficulty.NORMAL
     var generatorSettings: RegistryEntry<ChunkGeneratorSettings> =
-        player.server.registryManager.get(Registry.CHUNK_GENERATOR_SETTINGS_KEY).getEntry(ChunkGeneratorSettings.OVERWORLD).orElse(ChunkGeneratorSettings.getInstance())
+        player.server.registryManager.get(Registry.CHUNK_GENERATOR_SETTINGS_KEY).getEntry(ChunkGeneratorSettings.OVERWORLD).orElse(RegistryEntry.of(ChunkGeneratorSettings.createMissingSettings()))
 
     init {
         val generatorTypes = GeneratorTypes.values().toMutableList()
@@ -67,7 +67,7 @@ class CreateGuiHandler(player: ServerPlayerEntity) : SimpleGui(ScreenHandlerType
         setSlot(18, ActionComponent(Items.LIME_CONCRETE, "Submit") { submit() })
         setSlot(26, ActionComponent(Items.RED_CONCRETE, "Close") { close() })
 
-        title = "Create".text()
+        title = "Create".text().parse(null, null, 0)
         open()
     }
 
@@ -82,9 +82,8 @@ class CreateGuiHandler(player: ServerPlayerEntity) : SimpleGui(ScreenHandlerType
                 }*/
                 NoiseChunkGenerator(
                     maplike.server.registryManager.getManaged(Registry.STRUCTURE_SET_KEY),
-                    maplike.server.registryManager.getManaged(Registry.NOISE_WORLDGEN),
+                    maplike.server.registryManager.getManaged(Registry.NOISE_KEY),
                     biomeSource,
-                    seed,
                     generatorSettings
                 )
             }

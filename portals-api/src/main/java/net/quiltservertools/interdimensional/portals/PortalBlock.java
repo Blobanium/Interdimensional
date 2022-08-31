@@ -1,6 +1,6 @@
 package net.quiltservertools.interdimensional.portals;
 
-import eu.pb4.polymer.api.block.PlayerAwarePolymerBlock;
+import eu.pb4.polymer.api.block.PolymerBlock;
 import eu.pb4.polymer.api.client.PolymerClientDecoded;
 import eu.pb4.polymer.api.client.PolymerKeepModel;
 import net.minecraft.block.*;
@@ -31,7 +31,7 @@ import net.quiltservertools.interdimensional.portals.util.PortalLink;
 import java.util.Random;
 
 @SuppressWarnings({"deprecation", "UnstableApiUsage"})
-public class PortalBlock extends Block implements PlayerAwarePolymerBlock, PolymerKeepModel, PolymerClientDecoded {
+public class PortalBlock extends Block implements PolymerBlock, PolymerKeepModel, PolymerClientDecoded {
 
     @Override
     public Block getPolymerBlock(BlockState state) {
@@ -109,7 +109,7 @@ public class PortalBlock extends Block implements PlayerAwarePolymerBlock, Polym
 
             if (!entityInPortal.hasTeleported()) {
                 entityInPortal.setInPortal(true);
-                if (entityInPortal.getTimeInPortal() >= (entity.isInvulnerable() ? entity.getMaxNetherPortalTime() + entity.getDefaultNetherPortalCooldown() : entity.getMaxNetherPortalTime())) {
+                if (entityInPortal.getTimeInPortal() >= (entity.isInvulnerable() ? entity.getMaxNetherPortalTime() + entity.getDefaultPortalCooldown() : entity.getMaxNetherPortalTime())) {
                     if (link.permission != null && !link.permission.test(entity.getCommandSource())) {
                         // Entity does not have permissions to enter
                         return;
@@ -134,7 +134,8 @@ public class PortalBlock extends Block implements PlayerAwarePolymerBlock, Polym
         return InterdimensionalPortals.defaultPortalBaseFinder(world, pos);
     }
 
-    @Override
+
+    // Left Out until needed due to deprecated event.
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
         if (random.nextInt(100) == 0) {
             world.playSound((double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, SoundEvents.BLOCK_PORTAL_AMBIENT, SoundCategory.BLOCKS, 0.5F, random.nextFloat() * 0.4F + 0.8F, false);

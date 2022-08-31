@@ -17,10 +17,11 @@ class MultiNoiseResult(private val displayName: String, private val element: Bio
     override val biomeSource: BiomeSource
         get() {
             val biomes = worldLike.registryManager.get(Registry.BIOME_KEY)
+            val seed = element.handler.seed
             return if (nether) {
-                MultiNoiseBiomeSource.Preset.NETHER.getBiomeSource(biomes).withSeed(element.handler.seed)
+                MultiNoiseBiomeSource.Preset.NETHER.getBiomeSource(biomes)
             } else {
-                MultiNoiseBiomeSource.Preset.OVERWORLD.getBiomeSource(biomes).withSeed(element.handler.seed)
+                MultiNoiseBiomeSource.Preset.OVERWORLD.getBiomeSource(biomes)
             }
         }
 }

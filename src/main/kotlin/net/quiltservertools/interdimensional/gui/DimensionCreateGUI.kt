@@ -23,7 +23,7 @@ import net.quiltservertools.interdimensional.world.RuntimeWorldManager
 import org.apache.commons.lang3.RandomStringUtils
 import xyz.nucleoid.fantasy.RuntimeWorldConfig
 
-class DimensionCreateGUI(player: ServerPlayerEntity) : SimpleGui(ScreenHandlerType.GENERIC_9X3, player, false) {
+class DimensionCreateGUI(player: ServerPlayerEntity?) : SimpleGui(ScreenHandlerType.GENERIC_9X3, player, false) {
     private val dimConfig = RuntimeWorldConfig().apply {
         seed = player.server.overworld.seed
         setDimensionType(DimensionType.OVERWORLD_REGISTRY_KEY)

@@ -1,5 +1,5 @@
 package net.quiltservertools.interdimensional
 
-import net.minecraft.text.LiteralText
+import net.minecraft.text.LiteralTextContent
 
-fun String.text() = LiteralText(this)
+fun String.text() = LiteralTextContent(this)

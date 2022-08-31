@@ -5,8 +5,6 @@ import com.mojang.brigadier.tree.LiteralCommandNode
 import me.lucko.fabric.api.permissions.v0.Permissions
 import net.minecraft.command.argument.BlockStateArgument
 import net.minecraft.command.argument.BlockStateArgumentType
-import net.minecraft.server.command.CommandManager.argument
-import net.minecraft.server.command.CommandManager.literal
 import net.minecraft.server.command.ServerCommandSource
 import net.minecraft.util.Formatting
 import net.minecraft.util.Identifier
@@ -17,9 +15,16 @@ import net.quiltservertools.interdimensional.portals.portal.PortalIgnitionSource
 import net.quiltservertools.interdimensional.portals.util.ColorUtil
 import net.quiltservertools.interdimensional.world.Portal
 import net.quiltservertools.interdimensional.world.PortalManager
+import net.minecraft.command.CommandRegistryAccess
+import net.minecraft.util.registry.DynamicRegistryManager
+import com.mojang.serialization.Dynamic
+import net.minecraft.command.CommandSource
+import net.minecraft.server.MinecraftServer
+import net.minecraft.server.command.CommandManager.*
+import net.minecraft.server.dedicated.MinecraftDedicatedServer
 
 object PortalCommand : Command {
-    override fun register(): LiteralCommandNode<ServerCommandSource> {
+    override fun register(source: DynamicRegistryManager.Immutable): LiteralCommandNode<ServerCommandSource> {
         return literal("portal")
             .requires(Permissions.require("interdimensional.command.portal", 3))
             .then(
@@ -29,7 +34,7 @@ object PortalCommand : Command {
                             .then(
                                 argument(
                                     "frame_block",
-                                    BlockStateArgumentType.blockState()
+                                    BlockStateArgumentType.blockState(CommandRegistryAccess(source))
                                 )
                                     .executes {
                                         return@executes add(

@@ -4,10 +4,11 @@ import com.mojang.brigadier.tree.LiteralCommandNode
 import me.lucko.fabric.api.permissions.v0.Permissions
 import net.minecraft.server.command.CommandManager.literal
 import net.minecraft.server.command.ServerCommandSource
+import net.minecraft.util.registry.DynamicRegistryManager
 import net.quiltservertools.interdimensional.gui.DeleteGuiHandler
 
 object DeleteCommand : Command {
-    override fun register(): LiteralCommandNode<ServerCommandSource> {
+    override fun register(source: DynamicRegistryManager.Immutable): LiteralCommandNode<ServerCommandSource> {
         return literal("delete")
             .requires(Permissions.require("interdimensional.commands.delete", 3))
             .executes {

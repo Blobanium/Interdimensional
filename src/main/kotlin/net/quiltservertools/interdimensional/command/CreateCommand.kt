@@ -6,9 +6,10 @@ import com.mojang.brigadier.tree.LiteralCommandNode
 import me.lucko.fabric.api.permissions.v0.Permissions
 import net.minecraft.server.command.CommandManager
 import net.minecraft.server.command.ServerCommandSource
+import net.minecraft.util.registry.DynamicRegistryManager
 
 object CreateCommand : Command {
-    override fun register(): LiteralCommandNode<ServerCommandSource> {
+    override fun register(source: DynamicRegistryManager.Immutable): LiteralCommandNode<ServerCommandSource> {
         return CommandManager.literal("create")
             .requires(Permissions.require("interdimensional.command.create", 3))
                 .executes {
