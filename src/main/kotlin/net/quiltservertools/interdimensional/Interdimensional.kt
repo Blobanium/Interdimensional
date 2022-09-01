@@ -1,6 +1,7 @@
 package net.quiltservertools.interdimensional
 
 import com.mojang.brigadier.CommandDispatcher
+import kotlinx.serialization.descriptors.StructureKind
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
@@ -22,32 +23,44 @@ object Interdimensional : ModInitializer {
     val LOGGER: Logger = LogManager.getLogger()
     private lateinit var CONFIG: Config
     lateinit var REGISTRY: DynamicRegistryManager.Immutable
+    private lateinit var DISPACHER: CommandDispatcher<ServerCommandSource>
 
     override fun onInitialize() {
         ServerLifecycleEvents.SERVER_STARTED.register(ServerStarted { server: MinecraftServer ->
             serverStarting(server)
-            CommandRegistrationCallback.EVENT.register(CommandRegistrationCallback { commandDispatcher: CommandDispatcher<ServerCommandSource>, commandRegistryAccess: CommandRegistryAccess, registrationEnvironment: CommandManager.RegistrationEnvironment ->
-                registerCommands(commandDispatcher)
-            })
         })
         ServerLifecycleEvents.SERVER_STOPPING.register(ServerStopping {
             serverStopping()
+        })
+        CommandRegistrationCallback.EVENT.register(CommandRegistrationCallback { commandDispatcher: CommandDispatcher<ServerCommandSource>, commandRegistryAccess: CommandRegistryAccess, registrationEnvironment: CommandManager.RegistrationEnvironment ->
+            registerCommands(commandDispatcher, false)
         })
     }
 
     private fun serverStarting(server: MinecraftServer) {
         FANTASY = Fantasy.get(server)
         CONFIG = Config.createConfig(server.getSavePath(WorldSavePath.ROOT).resolve("dimensions.json"))
-        REGISTRY = server.registryManager
+        if(!Interdimensional::REGISTRY.isInitialized) {
+            REGISTRY = server.registryManager
+            registerCommands(DISPACHER, true)
+        }else{
+            REGISTRY = server.registryManager
+        }
     }
 
-    private fun registerCommands(dispatcher: CommandDispatcher<ServerCommandSource>) {
+    private fun registerCommands(dispatcher: CommandDispatcher<ServerCommandSource>, secondattempt: Boolean) {
         val root = InterdimensionalCommand.register(dispatcher)
 
         dispatcher.root.addChild(root)
-        root.addChild(CreateCommand.register(REGISTRY))
-        root.addChild(DeleteCommand.register(REGISTRY))
-        root.addChild(PortalCommand.register(REGISTRY))
+        if(!Interdimensional::REGISTRY.isInitialized && !secondattempt){
+            LOGGER.error("Could not register commands at this time, will do so once available")
+            DISPACHER = dispatcher
+        } else {
+            root.addChild(CreateCommand.register(REGISTRY))
+            root.addChild(DeleteCommand.register(REGISTRY))
+            root.addChild(PortalCommand.register(REGISTRY))
+            LOGGER.info("Commands Registered")
+        }
     }
 
     private fun serverStopping() {
