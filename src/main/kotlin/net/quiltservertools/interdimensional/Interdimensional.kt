@@ -26,12 +26,12 @@ object Interdimensional : ModInitializer {
     override fun onInitialize() {
         ServerLifecycleEvents.SERVER_STARTED.register(ServerStarted { server: MinecraftServer ->
             serverStarting(server)
+            CommandRegistrationCallback.EVENT.register(CommandRegistrationCallback { commandDispatcher: CommandDispatcher<ServerCommandSource>, commandRegistryAccess: CommandRegistryAccess, registrationEnvironment: CommandManager.RegistrationEnvironment ->
+                registerCommands(commandDispatcher)
+            })
         })
         ServerLifecycleEvents.SERVER_STOPPING.register(ServerStopping {
             serverStopping()
-        })
-        CommandRegistrationCallback.EVENT.register(CommandRegistrationCallback { commandDispatcher: CommandDispatcher<ServerCommandSource>, commandRegistryAccess: CommandRegistryAccess, registrationEnvironment: CommandManager.RegistrationEnvironment ->
-            registerCommands(commandDispatcher)
         })
     }
 
