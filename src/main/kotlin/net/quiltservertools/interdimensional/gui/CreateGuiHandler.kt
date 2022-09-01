@@ -116,10 +116,10 @@ class CreateGuiHandler(player: ServerPlayerEntity) : SimpleGui(ScreenHandlerType
         var idDimType: Identifier? = registryDimType.getId(maplike.dimension);
         if (idDimType == null) {
             idDimType = Identifier("interdimensional", identifier.namespace + "/" + identifier.path)
-            var freeze = (registryDimType as RemoveFromRegistry<DimensionType>).isFrozen
-            (registryDimType as RemoveFromRegistry<DimensionType>).isFrozen = false;
+            var freeze = (registryDimType as RemoveFromRegistry<DimensionType>).`fantasy$isFrozen`()
+            (registryDimType as RemoveFromRegistry<DimensionType>).`fantasy$setFrozen`(false)
             Registry.register(registryDimType, idDimType, maplike.dimension)
-            (registryDimType as RemoveFromRegistry<DimensionType>).isFrozen = freeze;
+            (registryDimType as RemoveFromRegistry<DimensionType>).`fantasy$setFrozen`(freeze)
         }
 
         config.setDimensionType(RegistryKey.of(Registry.DIMENSION_TYPE_KEY, idDimType))
