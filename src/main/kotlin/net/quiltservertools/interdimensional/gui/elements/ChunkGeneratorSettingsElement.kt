@@ -11,6 +11,6 @@ import net.quiltservertools.interdimensional.gui.options.ChunkGeneratorSettingsO
 class ChunkGeneratorSettingsElement(handler: CreateGuiHandler) : ShuffleComponent<ChunkGeneratorSettingsOptions>(handler, ChunkGeneratorSettingsOptions.values().toMutableList()) {
     override fun setResult() {
         handler.generatorSettings =
-                BuiltinRegistries.CHUNK_GENERATOR_SETTINGS.getEntry(this.options[this.index].value).orElse(ChunkGeneratorSettings.getInstance())
+                BuiltinRegistries.CHUNK_GENERATOR_SETTINGS.getEntry(this.options[this.index].value).orElse(ChunkGeneratorSettings.initAndGetDefault(null))
     }
 }

@@ -5,6 +5,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
 import net.minecraft.util.registry.RegistryKey
+import net.minecraft.world.biome.Biome
 import net.minecraft.world.biome.BuiltinBiomes
 import net.quiltservertools.interdimensional.gui.biomeSource.SingleBiomeResult
 import net.quiltservertools.interdimensional.gui.components.TextComponent
@@ -19,7 +20,7 @@ class BiomeIdentifierInputGui(private val element: BiomeSourceElement) : TextCom
             element.result = SingleBiomeResult(
                 element, element.handler.player.server.registryManager.get(Registry.BIOME_KEY).getEntry(
                     RegistryKey.of(Registry.BIOME_KEY, Identifier(this.input))
-                ).orElse(BuiltinBiomes.getDefaultBiome())
+                ).orElse(BuiltinBiomes.getDefaultBiome(null))
             )
             super.close()
             element.handler.open()

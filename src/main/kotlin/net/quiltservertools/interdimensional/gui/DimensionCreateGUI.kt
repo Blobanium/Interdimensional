@@ -11,8 +11,12 @@ import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
 import net.minecraft.world.Difficulty
 import net.minecraft.world.dimension.DimensionType
+import net.minecraft.world.dimension.DimensionTypes
 import net.minecraft.world.gen.GeneratorOptions
+import net.minecraft.world.gen.WorldPresets
 import net.minecraft.world.gen.chunk.ChunkGeneratorSettings
+import net.minecraft.world.gen.chunk.NoiseChunkGenerator
+import net.minecraft.world.gen.noise.NoiseConfig
 import net.quiltservertools.interdimensional.command.InterdimensionalCommand.success
 import net.quiltservertools.interdimensional.gui.elements.ClassSelectElement
 import net.quiltservertools.interdimensional.gui.elements.EnumSelectElement
@@ -25,30 +29,30 @@ import xyz.nucleoid.fantasy.RuntimeWorldConfig
 
 class DimensionCreateGUI(player: ServerPlayerEntity?) : SimpleGui(ScreenHandlerType.GENERIC_9X3, player, false) {
     private val dimConfig = RuntimeWorldConfig().apply {
-        seed = player.server.overworld.seed
-        setDimensionType(DimensionType.OVERWORLD_REGISTRY_KEY)
+        seed = player?.server!!.overworld.seed
+        setDimensionType(DimensionTypes.OVERWORLD)
     }
     var identifier = Identifier(this.player.gameProfile.name.lowercase(), RandomStringUtils.randomNumeric(5))
-    var genSettings: ChunkGeneratorSettings = player.server.registryManager.get(Registry.CHUNK_GENERATOR_SETTINGS_KEY)
+    var genSettings: ChunkGeneratorSettings = player?.server!!.registryManager.get(Registry.CHUNK_GENERATOR_SETTINGS_KEY)
         .getEntry(ChunkGeneratorSettings.OVERWORLD).get().value()
 
-    private val dimRegistry = player.server.registryManager.get(Registry.DIMENSION_TYPE_KEY)
-    private val genRegistry = player.server.registryManager.get(Registry.CHUNK_GENERATOR_SETTINGS_KEY)
+    private val dimRegistry = player?.server!!.registryManager.get(Registry.DIMENSION_TYPE_KEY)
+    private val genRegistry = player?.server!!.registryManager.get(Registry.CHUNK_GENERATOR_SETTINGS_KEY)
 
     override fun onUpdate(firstUpdate: Boolean) {
         this.setSlot(
             0,
             ClassSelectElement(
                 "Dimension Type",
-                { dimConfig.createDimensionOptions(player.server).dimensionTypeSupplier.value() },
+                { dimConfig.createDimensionOptions(player.server).dimensionTypeEntry.value() },
                 dimConfig::setDimensionType,
                 dimRegistry.stream().toList(),
-                { dimensionType -> dimRegistry.getId(dimensionType).toString().text() },
+                { dimensionType -> dimRegistry.getId(dimensionType).toString().text().parse(null, null, 0) },
                 mapOf(
-                    dimRegistry.get(DimensionType.OVERWORLD_REGISTRY_KEY) to Items.GRASS_BLOCK.defaultStack,
-                    dimRegistry.get(DimensionType.THE_NETHER_REGISTRY_KEY) to Items.NETHERRACK.defaultStack,
-                    dimRegistry.get(DimensionType.THE_END_REGISTRY_KEY) to Items.END_STONE.defaultStack,
-                    dimRegistry.get(DimensionType.OVERWORLD_CAVES_REGISTRY_KEY) to Items.STONE.defaultStack,
+                    dimRegistry.get(DimensionTypes.OVERWORLD) to Items.GRASS_BLOCK.defaultStack,
+                    dimRegistry.get(DimensionTypes.THE_NETHER) to Items.NETHERRACK.defaultStack,
+                    dimRegistry.get(DimensionTypes.THE_END) to Items.END_STONE.defaultStack,
+                    dimRegistry.get(DimensionTypes.OVERWORLD_CAVES) to Items.STONE.defaultStack,
                 )
             )
         )
@@ -97,7 +101,7 @@ class DimensionCreateGUI(player: ServerPlayerEntity?) : SimpleGui(ScreenHandlerT
                 this::genSettings.getter,
                 this::genSettings.setter,
                 genRegistry.stream().toList(),
-                { genSettings -> genRegistry.getId(genSettings).toString().text() },
+                { genSettings -> genRegistry.getId(genSettings).toString().text().parse(null, null, 0) },
                 mapOf(
                     genRegistry.get(ChunkGeneratorSettings.OVERWORLD)!! to Items.GRASS_BLOCK.defaultStack,
                     genRegistry.get(ChunkGeneratorSettings.NETHER)!! to Items.NETHERRACK.defaultStack,
@@ -114,7 +118,7 @@ class DimensionCreateGUI(player: ServerPlayerEntity?) : SimpleGui(ScreenHandlerT
             26,
             GuiElementBuilder()
                 .setItem(Items.GREEN_CONCRETE)
-                .setName("Create".text())
+                .setName(("Create".text().parse(null, null, 0)))
                 .setCallback(this::create)
         )
     }
@@ -124,11 +128,13 @@ class DimensionCreateGUI(player: ServerPlayerEntity?) : SimpleGui(ScreenHandlerT
 
         val config = RuntimeWorldConfig()
 
-        val generator = GeneratorOptions.createGenerator(
+        val noise = NoiseConfig.create(
             player.server.registryManager,
-            config.seed,
-            genRegistry.getKey(genSettings).get()
+            genRegistry.getKey(genSettings).get(),
+            config.seed
         )
+
+        val generator = WorldPresets.createDefaultOptions(player.server.registryManager, config.seed).chunkGenerator
         config.generator = generator
 
         RuntimeWorldManager.add(config, identifier)

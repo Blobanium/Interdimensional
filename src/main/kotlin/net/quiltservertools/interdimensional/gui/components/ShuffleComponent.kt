@@ -21,7 +21,7 @@ abstract class ShuffleComponent<T : Option>(val handler: CreateGuiHandler, val o
     }
 
     private fun createElement(option: Option): GuiElementInterface {
-        return GuiElement(option.getItemStack().setCustomName(option.getDisplayName().text())) {
+        return GuiElement(option.getItemStack().setCustomName(option.getDisplayName().text().parse(null, null, 0))) {
                 slotIndex: Int, type: ClickType?, action: SlotActionType?, gui: SlotGuiInterface ->
             index++
             if (index >= options.size) {

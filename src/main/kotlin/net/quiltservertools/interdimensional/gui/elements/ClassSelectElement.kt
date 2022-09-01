@@ -17,9 +17,7 @@ class ClassSelectElement<T>(
     private val icons: Map<T, ItemStack> = mapOf()
 ) : GuiElementInterface {
     override fun getItemStack(): ItemStack = (icons[getClass()]
-        ?: Items.STONE.defaultStack).setCustomName("$name: ".text().append(getName(getClass())).styled {
-        it.withItalic(false)
-    })
+        ?: Items.STONE.defaultStack).setCustomName("$name: ".text().parse(null, null, 0))
 
     override fun getGuiCallback() =
         GuiElementInterface.ClickCallback { index, type, action, gui ->

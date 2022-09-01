@@ -9,7 +9,7 @@ import net.minecraft.screen.slot.SlotActionType
 import net.quiltservertools.interdimensional.text
 
 class ActionComponent(private val item: Item, private val name: String, private val onClick: () -> Unit) : GuiElementInterface, GuiElementInterface.ClickCallback {
-    override fun getItemStack(): ItemStack = ItemStack(item).setCustomName(name.text())
+    override fun getItemStack(): ItemStack = ItemStack(item).setCustomName(name.text().parse(null, null, 0))
 
     override fun getGuiCallback(): GuiElementInterface.ClickCallback {
         return this

@@ -13,7 +13,7 @@ import net.quiltservertools.interdimensional.text
 
 class SingleBiomeResult(private val element: BiomeSourceElement, private val biome: RegistryEntry<Biome>) : BiomeSourceResult(element) {
     override fun getItemStack(): ItemStack {
-        return ItemStack(getItem()).setCustomName(element.handler.player.server.registryManager.get(Registry.BIOME_KEY).getId(biome.value())?.path?.text())
+        return ItemStack(getItem()).setCustomName(element.handler.player.server.registryManager.get(Registry.BIOME_KEY).getId(biome.value())?.path?.text()?.parse(null, null, 0))
     }
 
     override val biomeSource: BiomeSource
