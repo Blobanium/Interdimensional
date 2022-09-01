@@ -15,9 +15,7 @@ class LongSelectElement(
     private val getLong: () -> Long,
     private val setLong: (Long) -> Any,
 ) : GuiElementInterface {
-    override fun getItemStack(): ItemStack = icon.setCustomName("$name: ${getLong()}".text().styled {
-        it.withItalic(false)
-    })
+    override fun getItemStack(): ItemStack = icon.setCustomName("$name: ${getLong()}".text().parse(null, null, 0))
 
     override fun getGuiCallback() =
         GuiElementInterface.ClickCallback { index, type, action, gui ->
@@ -26,7 +24,7 @@ class LongSelectElement(
                     setDefaultInputValue(input.filter { it.isDigit() })
                     setSlot(
                         2,
-                        GuiElementBuilder.from(Items.WHEAT_SEEDS.defaultStack).setName(getInput().text())
+                        GuiElementBuilder.from(Items.WHEAT_SEEDS.defaultStack).setName(getInput().text().parse(null, null, 0))
                             .setCallback { _, _, _ -> this.close() })
                 }
 
@@ -36,10 +34,10 @@ class LongSelectElement(
                 }
             }
             inputGui.setDefaultInputValue(getLong().toString())
-            inputGui.title = name.text()
+            inputGui.title = name.text().parse(null, null, 0)
             inputGui.setSlot(
                 2,
-                GuiElementBuilder.from(Items.WHEAT_SEEDS.defaultStack).setName(inputGui.input.text())
+                GuiElementBuilder.from(Items.WHEAT_SEEDS.defaultStack).setName(inputGui.input.text().parse(null, null, 0))
                     .setCallback { _, _, _ -> gui.close() })
             parent.close()
             inputGui.open()

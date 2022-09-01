@@ -5,7 +5,8 @@ import eu.pb4.sgui.api.elements.GuiElementInterface
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
-import net.minecraft.text.LiteralText
+import net.minecraft.text.LiteralTextContent
+import net.minecraft.text.Style
 
 class EnumSelectElement<T : Enum<T>>(
     private val name: String,
@@ -15,11 +16,7 @@ class EnumSelectElement<T : Enum<T>>(
     private val values: Array<T>
 ) : GuiElementInterface {
     override fun getItemStack(): ItemStack = (items[getEnum()]?.defaultStack
-        ?: Items.STONE.defaultStack).setCustomName(LiteralText("$name: ${getEnum().name}").styled {
-        it.withItalic(
-            false
-        )
-    })
+        ?: Items.STONE.defaultStack).setCustomName(LiteralTextContent("$name: ${getEnum().name}").parse(null, null, 0))
 
     override fun getGuiCallback() =
         GuiElementInterface.ClickCallback { index, type, action, gui ->

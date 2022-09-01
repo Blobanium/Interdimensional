@@ -10,7 +10,6 @@ import net.minecraft.screen.ScreenHandlerType
 import net.minecraft.screen.slot.SlotActionType
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.world.gen.feature.FeatureConfig
-import net.minecraft.world.gen.feature.StructureFeature
 import net.quiltservertools.interdimensional.gui.CreateGuiHandler
 import net.quiltservertools.interdimensional.gui.components.LinkComponent
 import net.quiltservertools.interdimensional.text
@@ -27,13 +26,13 @@ class StructureSelectorElement(val handler: CreateGuiHandler) : LinkComponent {
         handler.player.server.worlds.forEach {
             gui.addSlot(WorldSelectorElement.getItem(it), ComponentCallback(it, this))
         }
-        gui.addSlot(ItemStack(Items.RED_CONCRETE).setCustomName("Disabled".text()), ComponentCallback(null, this))
+        gui.addSlot(ItemStack(Items.RED_CONCRETE).setCustomName("Disabled".text().parse(null, null, 0)), ComponentCallback(null, this))
         setResult(handler)
         handler.addSlot(this.createElement())
     }
 
     override fun getItemStack(): ItemStack {
-        return ItemStack(Items.CARTOGRAPHY_TABLE).setCustomName("Structures: ${this.result?.registryKey?.value?.path ?: "Disabled"}".text())
+        return ItemStack(Items.CARTOGRAPHY_TABLE).setCustomName("Structures: ${this.result?.registryKey?.value?.path ?: "Disabled"}".text().parse(null, null, 0))
     }
 
     override fun createOptions(index: Int) {

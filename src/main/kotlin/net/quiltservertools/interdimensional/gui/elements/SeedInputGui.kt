@@ -10,9 +10,9 @@ import org.apache.commons.lang3.StringUtils
 class SeedInputGui(val handler: CreateGuiHandler) : TextComponent.TextInputGui(handler.player) {
     override fun getItemStack(icon: Item, displayName: String): ItemStack {
         if (handler.seed != 0L) {
-            return ItemStack(icon).setCustomName("$displayName: ${handler.seed}".text())
+            return ItemStack(icon).setCustomName("$displayName: ${handler.seed}".text().parse(null, null, 0))
         }
-        return ItemStack(icon).setCustomName(displayName.text())
+        return ItemStack(icon).setCustomName(displayName.text().parse(null, null, 0))
     }
 
     override fun onClose() {

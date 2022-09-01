@@ -22,6 +22,6 @@ class IdentifierInputGui(val handler: CreateGuiHandler, current: Identifier) : T
     }
 
     override fun getItemStack(icon: Item, displayName: String): ItemStack {
-        return ItemStack(icon).setCustomName("$displayName: ${handler.identifier}".text())
+        return ItemStack(icon).setCustomName("$displayName: ${handler.identifier}".text().parse(null, null, 0))
     }
 }

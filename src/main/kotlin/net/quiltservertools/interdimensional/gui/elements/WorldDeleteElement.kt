@@ -30,7 +30,7 @@ class WorldDeleteElement(worlds: Iterable<ServerWorld>, val handler: DeleteGuiHa
         if (handler.identifier != null) {
             text = "World: ${handler.identifier}".text()
         }
-        return ItemStack(Items.FILLED_MAP).setCustomName(text)
+        return ItemStack(Items.FILLED_MAP).setCustomName(text.parse(null, null, 0))
     }
 
     override fun createOptions(index: Int) {

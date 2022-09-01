@@ -16,9 +16,7 @@ class IdentifierSelectElement(
     private val getIdentifier: () -> Identifier,
     private val setIdentifier: (Identifier) -> Any,
 ) : GuiElementInterface {
-    override fun getItemStack(): ItemStack = icon.setCustomName("$name: ${getIdentifier.invoke()}".text().styled {
-        it.withItalic(false)
-    })
+    override fun getItemStack(): ItemStack = icon.setCustomName("$name: ${getIdentifier.invoke()}".text().parse(null, null, 0))
 
     override fun getGuiCallback() =
         GuiElementInterface.ClickCallback { index, type, action, gui ->
@@ -27,7 +25,7 @@ class IdentifierSelectElement(
                     setDefaultInputValue(input.filter { Identifier.isCharValid(it) })
                     setSlot(
                         2,
-                        GuiElementBuilder.from(Items.WHEAT_SEEDS.defaultStack).setName(getInput().text())
+                        GuiElementBuilder.from(Items.WHEAT_SEEDS.defaultStack).setName(getInput().text().parse(null, null, 0))
                             .setCallback { _, _, _ -> this.close() })
                 }
 
@@ -37,10 +35,10 @@ class IdentifierSelectElement(
                 }
             }
             inputGui.setDefaultInputValue(getIdentifier.invoke().toString())
-            inputGui.title = name.text()
+            inputGui.title = name.text().parse(null, null, 0);
             inputGui.setSlot(
                 2,
-                GuiElementBuilder.from(Items.WHEAT_SEEDS.defaultStack).setName(inputGui.input.text())
+                GuiElementBuilder.from(Items.WHEAT_SEEDS.defaultStack).setName(inputGui.input.text().parse(null, null, 0))
                     .setCallback { _, _, _ -> gui.close() })
             parent.close()
             inputGui.open()
