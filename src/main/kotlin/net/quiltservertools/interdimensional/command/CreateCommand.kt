@@ -19,7 +19,7 @@ object CreateCommand : Command {
     }
 
     private fun createSgui(ctx: CommandContext<ServerCommandSource>): Int {
-        DimensionCreateGUI(ctx.source.player).open()
+        DimensionCreateGUI(ctx.source.player, ctx.source).open()
         return 1
     }
 }

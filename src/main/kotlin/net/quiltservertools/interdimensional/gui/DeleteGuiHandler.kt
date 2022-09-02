@@ -3,6 +3,7 @@ package net.quiltservertools.interdimensional.gui
 import eu.pb4.sgui.api.gui.SimpleGui
 import net.minecraft.item.Items
 import net.minecraft.screen.ScreenHandlerType
+import net.minecraft.server.command.ServerCommandSource
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
@@ -15,7 +16,7 @@ import net.quiltservertools.interdimensional.text
 import net.quiltservertools.interdimensional.world.RuntimeWorldManager
 import xyz.nucleoid.fantasy.RemoveFromRegistry
 
-class DeleteGuiHandler(player: ServerPlayerEntity?): SimpleGui(ScreenHandlerType.GENERIC_9X3, player, false) {
+class DeleteGuiHandler(player: ServerPlayerEntity?, source: ServerCommandSource): SimpleGui(ScreenHandlerType.GENERIC_9X3, player, false) {
     var identifier: Identifier? = null
 
     init {
@@ -25,7 +26,7 @@ class DeleteGuiHandler(player: ServerPlayerEntity?): SimpleGui(ScreenHandlerType
         setSlot(18, ActionComponent(Items.LIME_CONCRETE, "Submit") { submit() })
         setSlot(26, ActionComponent(Items.RED_CONCRETE, "Close") { close() })
 
-        title = "Delete".text().parse(null, null, 0)
+        title = "Delete".text().parse(source, null, 0)
         open()
     }
 

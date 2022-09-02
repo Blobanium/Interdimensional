@@ -18,7 +18,7 @@ object DeleteCommand : Command {
     }
 
     private fun delete(scs: ServerCommandSource): Int {
-        DeleteGuiHandler(scs.player)
+        DeleteGuiHandler(scs.player, scs)
         return 0
     }
 }

@@ -49,13 +49,13 @@ object Interdimensional : ModInitializer {
     }
 
     private fun registerCommands(dispatcher: CommandDispatcher<ServerCommandSource>, secondattempt: Boolean) {
-        val root = InterdimensionalCommand.register(dispatcher)
-
-        dispatcher.root.addChild(root)
         if(!Interdimensional::REGISTRY.isInitialized && !secondattempt){
             LOGGER.error("Could not register commands at this time, will do so once available")
             DISPACHER = dispatcher
         } else {
+            val root = InterdimensionalCommand.register(dispatcher)
+
+            dispatcher.root.addChild(root)
             root.addChild(CreateCommand.register(REGISTRY))
             root.addChild(DeleteCommand.register(REGISTRY))
             root.addChild(PortalCommand.register(REGISTRY))
