@@ -40,6 +40,7 @@ class CreateGuiHandler(player: ServerPlayerEntity) : SimpleGui(ScreenHandlerType
         player.server.registryManager.get(Registry.CHUNK_GENERATOR_SETTINGS_KEY).getEntry(ChunkGeneratorSettings.OVERWORLD).orElse(RegistryEntry.of(ChunkGeneratorSettings.createMissingSettings()))
 
     init {
+        println("init started")
         val generatorTypes = GeneratorTypes.values().toMutableList()
 
         // World info
@@ -69,6 +70,7 @@ class CreateGuiHandler(player: ServerPlayerEntity) : SimpleGui(ScreenHandlerType
 
         title = "Create".text().parse(null, null, 0)
         open()
+        println("init end")
     }
 
     @Suppress("CAST_NEVER_SUCCEEDS")

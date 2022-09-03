@@ -7,6 +7,7 @@ import me.lucko.fabric.api.permissions.v0.Permissions
 import net.minecraft.server.command.CommandManager
 import net.minecraft.server.command.ServerCommandSource
 import net.minecraft.util.registry.DynamicRegistryManager
+import net.quiltservertools.interdimensional.Interdimensional
 
 object CreateCommand : Command {
     override fun register(source: DynamicRegistryManager.Immutable): LiteralCommandNode<ServerCommandSource> {
@@ -19,7 +20,7 @@ object CreateCommand : Command {
     }
 
     private fun createSgui(ctx: CommandContext<ServerCommandSource>): Int {
-        DimensionCreateGUI(ctx.source.player, ctx.source).open()
-        return 1
+        DimensionCreateGUI(ctx.source.player).open()
+        return 0
     }
 }
